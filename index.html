@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AidensServer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>AidensServer</h1>
+    <p>IP: <strong>AidensServer.aternos.me:51889</strong></p>
+    <a class="btn" href="#how-to-join">How to Join</a>
+  </header>
+
+  <section class="status">
+    <h2>Server Status</h2>
+    <p id="server-status">Checking...</p>
+  </section>
+
+  <section class="about">
+    <h2>About Our Server</h2>
+    <p>Welcome to AidensServer, a fun and friendly Minecraft world where everyone is welcome. Build, explore, and survive together!</p>
+  </section>
+
+  <section id="how-to-join">
+    <h2>How to Join</h2>
+    <ol>
+      <li>Open Minecraft Java Edition</li>
+      <li>Click on "Multiplayer"</li>
+      <li>Click "Add Server"</li>
+      <li>Server IP: <code>AidensServer.aternos.me:51889</code></li>
+      <li>Click "Done" and "Join Server"</li>
+    </ol>
+  </section>
+
+  <footer>
+    <p>© 2025 AidensServer | Made with ♥ for Minecraft fans</p>
+  </footer>
+
+  <script>
+    async function checkStatus() {
+      const statusText = document.getElementById("server-status");
+      try {
+        const response = await fetch("https://api.mcsrvstat.us/2/AidensServer.aternos.me:51889");
+        const data = await response.json();
+        if (data.online) {
+          statusText.innerHTML = `🟢 Online with ${data.players.online}/${data.players.max} players`;
+        } else {
+          statusText.innerHTML = `🔴 Server is Offline`;
+        }
+      } catch (err) {
+        statusText.innerHTML = "⚠️ Unable to fetch server status.";
+      }
+    }
+    checkStatus();
+  </script>
+</body>
+</html>
