@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AidensServer</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
   <header>
@@ -23,6 +24,17 @@
     <p>Welcome to AidensServer, a fun and friendly Minecraft world where everyone is welcome. Build, explore, and survive together!</p>
   </section>
 
+  <section id="server-rules">
+    <h2>Server Rules</h2>
+    <ul>
+      <li>Be respectful to all players.</li>
+      <li>No griefing or stealing.</li>
+      <li>No cheating or hacking.</li>
+      <li>Keep chat friendly and clean.</li>
+      <li>Follow the Minecraft EULA.</li>
+    </ul>
+  </section>
+
   <section id="how-to-join">
     <h2>How to Join</h2>
     <ol>
@@ -34,11 +46,21 @@
     </ol>
   </section>
 
+  <section id="chat-section">
+    <h2>Chatbox</h2>
+    <div id="chat-window"></div>
+    <form id="chat-form">
+      <input id="chat-input" autocomplete="off" placeholder="Type your message..." />
+      <button type="submit">Send</button>
+    </form>
+  </section>
+
   <footer>
     <p>© 2025 AidensServer | Made with ♥ for Minecraft fans</p>
   </footer>
 
   <script>
+    // Check server status (same as before)
     async function checkStatus() {
       const statusText = document.getElementById("server-status");
       try {
@@ -54,6 +76,29 @@
       }
     }
     checkStatus();
+
+    // Socket.io chat client
+    const socket = io();
+
+    const chatForm = document.getElementById('chat-form');
+    const chatInput = document.getElementById('chat-input');
+    const chatWindow = document.getElementById('chat-window');
+
+    chatForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const msg = chatInput.value.trim();
+      if (msg) {
+        socket.emit('chat message', msg);
+        chatInput.value = '';
+      }
+    });
+
+    socket.on('chat message', msg => {
+      const msgElem = document.createElement('div');
+      msgElem.textContent = msg;
+      chatWindow.appendChild(msgElem);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    });
   </script>
 </body>
 </html>
